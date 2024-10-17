@@ -1,0 +1,9 @@
+io/confluent/avro/random/generator/Main.class
+io/confluent/avro/random/generator/Generator$LengthBounds.class
+io/confluent/avro/random/generator/Generator.class
+io/confluent/avro/random/generator/Generator$1.class
+io/confluent/avro/random/generator/Generator$DecimalIterator$Type.class
+io/confluent/avro/random/generator/Generator$IntegralIterator$Type.class
+io/confluent/avro/random/generator/Generator$BooleanIterator.class
+io/confluent/avro/random/generator/Generator$IntegralIterator.class
+io/confluent/avro/random/generator/Generator$DecimalIterator.class
