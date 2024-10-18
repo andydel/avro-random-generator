@@ -21,35 +21,38 @@
     },
     {
       "name": "signupDate",
-      "doc": "String date type that represents a date in the format `YYYY-MM-DD`",
-      "type": "string",
-      "arg.properties": {
-        "options": {
-          "date_formats": [
-            "yyyy-MM-dd", "dd/MM/yyyy"
-          ],
-          "earliest": "2020-01-01",
-          "latest": "2020-12-31"
-        }
+      "type": {
+        "type": "string",
+        "arg.properties": {
+            "date_formats": ["yyyy-MM-dd", "dd/MM/yyyy"],
+            "earliest": "2020-01-01T00:00:00",
+            "latest": "2020-12-31T23:59:59"
+          }
       }
     },
     {
       "name": "lastLoginTime",
-      "type": "string",
-      "arg.properties": {
-        "options": {
-          "date_formats": ["yyyy-MM-dd'T'HH:mm:ss.SSSZ"]
+      "type": {
+        "type": "string",
+        "arg.properties": {
+            "date_formats": [
+              "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+            ]
         }
       }
     },
     {
       "name": "accountClosureDate",
-      "type": ["null", "string"],
-      "arg.properties": {
-        "options": {
-          "date_formats": ["dd/MM/yyyy"]
+      "type": ["null",
+        {
+          "type": "string",
+          "arg.properties": {
+              "date_formats": [
+                "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+              ]
+          }
         }
-      }
+      ]
     },
     {
       "name": "emailAddresses",

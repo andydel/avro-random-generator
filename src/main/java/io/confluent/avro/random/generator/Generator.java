@@ -33,6 +33,11 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalField;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -83,6 +88,10 @@ public class Generator {
    * be used in conjunction with {@link #LENGTH_PROP}. Must be given as a string.
    */
   public static final String REGEX_PROP = "regex";
+
+  public static final String DATE_FORMAT_PROP = "date_formats";
+  public static final String EARLIEST_PROP = "earliest";
+  public static final String LATEST_PROP = "latest";
 
   /**
    * The name of the attribute for specifying specific values which should be randomly chosen from
@@ -1109,9 +1118,36 @@ public class Generator {
 
   private String generateString(Schema schema, Map propertiesProp) {
     Object regexProp = propertiesProp.get(REGEX_PROP);
+    var dfProp = propertiesProp.get(DATE_FORMAT_PROP);
     if (regexProp != null) {
       return generateRegexString(schema, regexProp, getLengthBounds(propertiesProp));
-    } else {
+    } else if (dfProp != null) {
+      var minDate = propertiesProp.get(EARLIEST_PROP);
+      var maxDate = propertiesProp.get(LATEST_PROP);
+      if (!(dfProp instanceof List) || (minDate != null && !(minDate instanceof String)) ||
+          (maxDate != null && !(maxDate instanceof String))) {
+        throw new RuntimeException(String.format(
+            "%s, %s, %s properties must be a string",
+            DATE_FORMAT_PROP, EARLIEST_PROP, LATEST_PROP
+        ));
+      }
+      long minimum = 0;
+      long maximum = 2556143999000L; //31 Dec 2050
+      if (minDate != null) {
+        minimum = Instant.from(LocalDateTime.parse(minDate.toString()).atZone(ZoneId.of("UTC"))).toEpochMilli();
+      }
+      if (maxDate != null) {
+        maximum = Instant.from(LocalDateTime.parse(maxDate.toString()).atZone(ZoneId.of("UTC"))).toEpochMilli();
+      }
+      long randomDate = random.nextLong(minimum, maximum);
+      var generatedDate = Instant.ofEpochMilli(randomDate);
+      var dfprops = (List)dfProp;
+      var rndFormat = random.nextInt(dfprops.size());
+      return DateTimeFormatter.ofPattern((String)dfprops.get(rndFormat)).withZone(ZoneId.of("UTC")).format(generatedDate);
+
+    }
+
+    else {
       return generateRandomString(getLengthBounds(propertiesProp).random());
     }
   }
