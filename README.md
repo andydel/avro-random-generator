@@ -147,6 +147,7 @@ The following schemas support the following annotations:
 + options
 + length*
 + regex*
++ formatted dates
 
 __*Note:__ If both length and regex are specified for a string,
 the length property (if a JSON number) becomes a minimum length for the
@@ -268,6 +269,30 @@ enum chosen from the symbols list.
 }
 ```
 
+### formatted_date.json
+
+```
+{
+  "type": "record",
+  "name": "formatted_date",
+  "fields": [
+    {
+      "name": "date",
+      "type": {
+        "type": "string",
+        "arg.properties": {
+            "date_formats": ["yyyy-MM-dd", "dd/MM/yyyy"],
+            "earliest": "2020-01-01T00:00:00",
+            "latest": "2020-12-31T23:59:59"
+          }
+      }
+    }
+  ]
+}
+```
+ - date_formats: A list of date formats that the date should be in. If there is more than one format it will be outputted in a random format picked from the list.
+ - earliest: The earliest date that can be generated (optional)
+ - latest: The latest date that can be generated (optional)
 An annotated record schema, with a variety of string fields. Each field
 has its own way of preventing the specified string from becoming too
 long, either via the length annotation or the regex annotation.
